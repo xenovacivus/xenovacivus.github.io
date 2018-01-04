@@ -1,0 +1,111 @@
+---
+layout: page
+title:  "Curve Simulator"
+date:   2018-01-04 00:50:00 -0800
+categories: motion-control
+---
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <script type="text/javascript" src="matter.min.js"></script>
+    <script type="text/javascript" src="smoothie.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  </head>
+  
+  <body onload="onPageLoad()">
+  
+    <!-- Heading and Description -->
+    <!--h1>S-Curve and Trapezoidal Motion Simulator</h1-->
+    <h3>Directions</h3>
+    <p>Use the controls to adjust the <b style="color:green">velocity</b>,
+    <b style="color:blue">acceleration</b>, and <b style="color:brown">jerk</b> of basic curve profiles.
+    The simulation will target motion from 0 to <b style="color:red">1500</b> units.  The square is the driver,
+    and follows the curve position exactly.  The circle is connected to the square through a spring with the
+    given stiffness, representing real-world mechanical connections (through belts, pulleys, linkages,
+    etc.).  The simulation doesn't include anything related to backlash (but that might be interesting
+    to add in the future!).
+    </p>
+    <p>The <b style="color:green">green</b> square and circle follow the S-Curve profile, and the
+    <b style="color:coral">orange</b> block and circle follow the constant acceleration (trapezoidal)
+    profile.
+    </p>
+    
+    <!-- Bring in the simulator javascript.  Needs access to the body element. -->
+    <script type="text/javascript" src="simulator.js"></script>
+    
+    <!-- Curve Parameter Sliders -->
+    <div class="slidergroup" style="height:100%">
+      <form>
+      
+        <p>
+          <label><h3></h3></label>
+          <label><h3>S-Curve Parameters</h3></label>
+        </p>
+        <p>
+          <label for="velocity_slider">Velocity:</label>
+          <input id="velocity_slider" type="range" min="5" max="20" value="10" class="slider">
+          <label class="slider_display" id="velocity_slider_label" >1000</label>
+        </p>
+        <p>
+          <label for="acceleration_slider">Acceleration:</label>
+          <input id="acceleration_slider" type="range" min="5" max="100" value="25" class="slider">
+          <label class="slider_display" id="acceleration_slider_label" >2500</label>
+        </p>
+        <p>
+          <label for="jerk_slider">Jerk:</label>
+          <input id="jerk_slider" type="range" min="5" max="100" value="10" class="slider">
+          <label class="slider_display" id="jerk_slider_label" >10000</label>
+        </p>
+        
+        
+        <p>
+          <label><h3></h3></label>
+          <label><h3>Trapezoid Parameters</h3></label>
+        </p>
+        <p>
+          <label for="tvelocity_slider">Velocity:</label>
+          <input id="tvelocity_slider" type="range" min="5" max="20" value="10" class="slider">
+          <label class="slider_display" id="tvelocity_slider_label" >1000</label>
+        </p>
+        <p>
+          <label for="tacceleration_slider">Acceleration:</label>
+          <input id="tacceleration_slider" type="range" min="5" max="100" value="25" class="slider">
+          <label class="slider_display" id="tacceleration_slider_label" >2500</label>
+        </p>
+        
+        <p>
+          <label><h3></h3></label>
+          <label><h3>Simulation</h3></label>
+        </p>
+        <p>
+          <label for="stiffness_slider">Stiffness:</label>
+          <input id="stiffness_slider" type="range" min="1" max="99" value="20" class="slider">
+          <label class="slider_display" id="stiffness_slider_label" >0.2</label>
+        </p>
+        <p>
+          <label><h3></h3></label>
+          <label style="text-align:center"><button type="button" onclick="resetSimulation()">Run</button></label>
+        </p>
+        
+      </form>
+    </div>
+    
+    <!-- Simulation -->
+    <canvas id="physics" width="800" height="200"></canvas>
+    
+    <!-- Graphs -->
+    <div class="chartarea">
+      <h3>S-Curve Motion Profile</h3>
+      <canvas id="s_curve_chart" width="800" height="200"></canvas>
+      <h3>Trapezoidal Curve Motion Profile</h3>
+      <canvas id="t_curve_chart" width="800" height="200"></canvas>
+      <h3>Position Error</h3>
+      <canvas id="error_chart" width="800" height="200"></canvas>
+    </div>
+    
+    <p>simulated with <a href="http://brm.io/matter-js/">matter.js</a></p>
+
+        
+  </body>
+</html>
