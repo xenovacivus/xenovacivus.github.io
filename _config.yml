@@ -25,10 +25,8 @@
 title: XENOVACIVUS - INVESTIGATING ALL THE THINGS
 # email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Digging into the details of things often taken for granted.
-  Experimenting to reveal behaviors not readily exposed.
-  Using Science, Math, and Technology to observe and improve!
-  A better mousetrap is just around the corner...
+  Using Science, Math, and Technology to explore and improve
+  the things!  A better mousetrap is just around the corner!
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://xenovacivus.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: xenovacivus
