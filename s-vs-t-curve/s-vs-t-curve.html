@@ -1,0 +1,162 @@
+---
+layout: page
+title:  "Motion Profile Comparison"
+date:   2020-04-25 00:00:00 -0800
+categories: motion-control
+---
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+  </head>
+  
+  <body onload="onPageLoad()">
+  
+    <!-- Heading and Description (Jekyll adds this as a page header) -->
+    <!--h1>Motion Profile Investigation and Comparison</h1-->
+    <p>
+      The graphs on this page plot profiles (position, velocity, and acceleration) for an s-curve and
+      trapezoidal curve.  The curve parameters can be controlled dynamically with the sliders below.  Both
+      curves have a target position of 200mm, and are calculated so they reach the target at the same time.
+    </p>
+    
+    <p>
+      The resulting curves are fed into a simple simulator replicating the behavior of two blocks connected
+      by a spring.  One block is driven exactly by a motion profile (replicating an ideal motor), and the other
+      is driven by the force from the spring.
+      <p>
+        <img style="width:546px;height:82px" src="/media/block-spring-block.png" alt="Image of two blocks coupled by a spring"></img>
+      </p>
+      The position error between these blocks is graphed (the oscillating lines in the chart below).
+      Generally, the trapezoidal curve tends to show more oscillation and larger overall error.  But there
+      are some frequencies where the s-curve shows more error (around 10Hz).  Use the "Resonant Frequency"
+      slider to adjust the mass/spring constant ratio of the simulation and see how it affects the error.
+    </p>
+    
+    <!--p>
+      Adjust the sliders and hit the "Update Graphs" button to refresh the display.
+    </p-->
+    
+    <!-- Bring in the simulator javascript.  Needs access to the body element. -->
+    <script type="text/javascript" src="simulator.js"></script>
+    
+    <!-- Parameter Sliders -->
+    <div class="slidergroup" style="height:100%">
+      <form>
+      
+        <p>
+          <label><h3></h3></label>
+          <label><h3>S-Curve Parameters</h3></label>
+        </p>
+        <p>
+          <label for="velocity_slider">Velocity:</label>
+          <input id="velocity_slider" type="range" min="50" max="500" value="300" step="10" class="slider" oninput="onKinematicSliderChanged()">
+          <label class="slider_display" id="velocity_slider_label" >1000</label>
+        </p>
+        <p>
+          <label for="acceleration_slider">Acceleration:</label>
+          <input id="acceleration_slider" type="range" min="500" max="5000" value="3000" step="100" class="slider" oninput="onKinematicSliderChanged()">
+          <label class="slider_display" id="acceleration_slider_label" >2500</label>
+        </p>
+        <p>
+          <label for="jerk_slider">Jerk:</label>
+          <input id="jerk_slider" type="range" min="1000" max="500000" value="75000" step="1000" class="slider" oninput="onKinematicSliderChanged()">
+          <label class="slider_display" id="jerk_slider_label" >10000</label>
+        </p>
+        
+        <p>
+          <label><h3></h3></label>
+          <label><h3>Spring/Mass Properties</h3></label>
+        </p>
+        <p>
+          <label for="resonant_frequency_slider">Resonant Frequency:</label>
+          <input id="resonant_frequency_slider" type="range" min="1" max="100" value="50" class="slider" oninput="onPhysicsSliderChanged()">
+          <label class="slider_display" id="resonant_frequency_slider_label" ></label>
+        </p>
+        <p>
+          <label for="damping_slider">Damping:</label>
+          <input id="damping_slider" type="range" min="1" max="99" value="50" class="slider" oninput="onPhysicsSliderChanged()">
+          <label class="slider_display" id="damping_slider_label" ></label>
+        </p>
+        
+        <p>
+          <label></label>
+          <input type="button" onclick="recomputeAllCharts()" value="Update Graphs"></input>
+          <!--label class="slider_display" >blah2</label-->
+          <label class="slider_display" >Auto Update: <input type="checkbox" id="auto_update_checkbox"></input></label>
+        </p>
+        
+      </form>
+    </div>
+    
+    
+    
+    <!-- Graphs -->
+    <div style="position: relative; width:800px">
+      <p>
+        <label for="show_position_graphs_checkbox">
+          (show kinematic graphs
+          <input id="show_position_graphs_checkbox" type="checkbox" checked="true" oninput="updatePositionGraphVisibility()">)
+        </label>
+        <label for="show_frequency_graphs_checkbox">
+          (show frequency graphs
+          <input id="show_frequency_graphs_checkbox" type="checkbox" checked="true" oninput="updateFrequencyGraphVisibility()">)
+        </label>
+      </p>
+      <canvas id="kinematic_chart_canvas" width="800" height="600"></canvas>
+      <canvas id="frequency_chart_canvas" width="800" height="400"></canvas>
+    </div>
+    
+    <p>graphed using <a href="https://www.chartjs.org/">chartjs</a></p>
+    
+    
+    
+    <h3>Analysis</h3>
+    <p>
+      In general, the s-curve contains fewer high-frequency components than the trapezoidal curve.  This means it's less likely to excite high-frequency vibrations.
+      This makes sense, because the sharp jumps in acceleration of the trapezoidal curve profile theoretically contain a wide band of frequencies.  As for the s-curve, the
+      higher response at lower frequency is likely due to the larger acceleration (which is required to reach the target position at the same time as the trapezoidal curve).
+    </p>
+    <p>
+      Trapezoidal motion profiles result in the fastest motion due to constant maximum acceleration and deceleration.  But the sudden jump in acceleration can excite
+      high-frequency mechanical oscillations.  These high-frequency oscillations can be mitigated by adding either mass or damping to the system.  Belt-driven systems
+      (like most 3d printers) likely have sufficient damping from the belts.
+    </p>
+    <p>
+      S-curve profiles ramp acceleration linearly and reduce high-frequency noise, but require more time to complete a move than an equivalent trapezoidal profile.
+      Alternatively, an s-curve profile can be created which matches the completion speed of a trapezoidal profile by increasing maximum acceleration (as is done here).
+      Depending on the driven system, this might be OK as the reduction in oscillations also reduces the maximum force presented to the drive mechanism.  The plots
+      above show this is the case with <i>some</i> frequencies, but not all (so be careful making this assumption).  S-curve profiles also appear to contain higher
+      magnitude low-frequency components, which could provoke resonant vibrations in systems with flexible linkages and high mass.
+    </p>
+    
+    <h3>Trapezoidal Motion Profiles</h3>
+    <p>
+      A trapezoidal profile is composed of three sections:
+      <!--ol>
+        <li>Constant maximum acceleration</li>
+        <li>Velocity Plateau (zero acceleration)</li>
+        <li>Constant maximum deceleration</li>
+      </ol-->
+      <p><img style="width:523px;height:239px" src="/media/trapezoidal-motion-profile.png" alt="Image of a trapezoidal motion profile"></img></p>
+    </p>
+    
+    <h3>S-Curve Motion Profiles</h3>
+    <p>
+      An S-curve profiles is composed of seven sections:
+      <!--ol>
+        <li>Constant Jerk (increasing acceleration)</li>
+        <li>Constant maximum acceleration</li>
+        <li>Constant Jerk (decreasing acceleration</li>
+        <li>Velocity Plateau (zero acceleration)</li>
+        <li>Constant Jerk (decreasing acceleration</li>
+        <li>Constant maximum deceleration</li>
+        <li>Constant Jerk (increasing acceleration)</li>
+      </ol-->
+      <p><img style="width:547px;height:297px" src="/media/s-curve-motion-profile.png" alt="Image of an s-curve motion profile"></img></p>
+    </p>
+    
+  </body>
+</html>
