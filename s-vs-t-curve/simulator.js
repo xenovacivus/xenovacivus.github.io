@@ -583,8 +583,8 @@ function acc_dft(curve, fmin, fmax)
     
     src = [];
     
-    sample_period = max_time / 500; // Constant 500 points.
-    //sample_period = 1 / 200; // The acceleration waveforms contain high-frequency components, so sample at a high rate (500Hz in this case).
+    //sample_period = max_time / 5000; // Constant 500 points.
+    sample_period = 1 / 300; // The acceleration waveforms contain high-frequency components, so sample at a high rate (300Hz in this case).
     for (var t = 0; t < max_time; t += sample_period)
     {
         src.push(s_curve_acc(curve, t));
@@ -674,6 +674,7 @@ function update_error_data()
 
 function reloadParameters()
 {
+    p_target = (1.0 * document.getElementById("position_slider").value);
     max_vel = (1.0 * document.getElementById("velocity_slider").value);
     max_acc = (1.0 * document.getElementById("acceleration_slider").value);
     max_jrk = (1.0 * document.getElementById("jerk_slider").value);
@@ -684,11 +685,12 @@ function reloadParameters()
     spring_k = mass * Math.pow((2 * 3.14 * osc_frequency), 2);
     damping = Math.round((1.0 * document.getElementById("damping_slider").value)) / 20;
     
-    document.getElementById("velocity_slider_label").innerHTML = max_vel + " m/s";
-    document.getElementById("jerk_slider_label").innerHTML = max_jrk + " m/s&sup3;";
+    document.getElementById("position_slider_label").innerHTML = p_target + " mm";
+    document.getElementById("velocity_slider_label").innerHTML = max_vel + " mm/s";
+    document.getElementById("jerk_slider_label").innerHTML = max_jrk + " mm/s&sup3;";
     
     document.getElementById("resonant_frequency_slider_label").innerHTML = "&Sqrt;<span style='text-decoration: overline'>(k/m)</span> = " + osc_frequency + " Hz";
-    document.getElementById("damping_slider_label").innerHTML = damping + " Ns/m";
+    document.getElementById("damping_slider_label").innerHTML = damping + " Ns/mm";
     
     
     
@@ -737,7 +739,7 @@ function reloadParameters()
     //     info_str = " (limited to " + Math.round(effective_acceleration) + ")"
     // }
     
-    document.getElementById("acceleration_slider_label").innerHTML = "" + max_acc + " m/s&sup2;" + info_str + " (trapezoidal acceleration: " + Math.round(max_acc_t_curve) + ")";
+    document.getElementById("acceleration_slider_label").innerHTML = "" + max_acc + " mm/s&sup2;" + info_str + " (trapezoidal acceleration: " + Math.round(max_acc_t_curve) + ")";
     
 
 }

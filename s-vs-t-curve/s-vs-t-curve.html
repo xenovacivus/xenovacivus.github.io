@@ -19,7 +19,7 @@ categories: motion-control
     <p>
       The graphs on this page plot profiles (position, velocity, and acceleration) for an s-curve and
       trapezoidal curve.  The curve parameters can be controlled dynamically with the sliders below.  Both
-      curves have a target position of 200mm, and are calculated so they reach the target at the same time.
+      curves have the same target position, and are calculated so they reach the target at the same time.
     </p>
     
     <p>
@@ -48,22 +48,27 @@ categories: motion-control
       
         <p>
           <label><h3></h3></label>
-          <label><h3>S-Curve Parameters</h3></label>
+          <label><h3>Curve Parameters</h3></label>
+        </p>
+        <p>
+          <label for="position_slider">Target Position:</label>
+          <input id="position_slider" type="range" min="10" max="500" value="200" step="10" class="slider" oninput="onKinematicSliderChanged()">
+          <label class="slider_display" id="position_slider_label" ></label>
         </p>
         <p>
           <label for="velocity_slider">Velocity:</label>
-          <input id="velocity_slider" type="range" min="50" max="500" value="300" step="10" class="slider" oninput="onKinematicSliderChanged()">
-          <label class="slider_display" id="velocity_slider_label" >1000</label>
+          <input id="velocity_slider" type="range" min="50" max="500" value="200" step="10" class="slider" oninput="onKinematicSliderChanged()">
+          <label class="slider_display" id="velocity_slider_label" ></label>
         </p>
         <p>
           <label for="acceleration_slider">Acceleration:</label>
           <input id="acceleration_slider" type="range" min="500" max="5000" value="3000" step="100" class="slider" oninput="onKinematicSliderChanged()">
-          <label class="slider_display" id="acceleration_slider_label" >2500</label>
+          <label class="slider_display" id="acceleration_slider_label" ></label>
         </p>
         <p>
           <label for="jerk_slider">Jerk:</label>
           <input id="jerk_slider" type="range" min="1000" max="500000" value="75000" step="1000" class="slider" oninput="onKinematicSliderChanged()">
-          <label class="slider_display" id="jerk_slider_label" >10000</label>
+          <label class="slider_display" id="jerk_slider_label" ></label>
         </p>
         
         <p>
