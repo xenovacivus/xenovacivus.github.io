@@ -12,7 +12,7 @@ categories: motion-control
     <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
   
-  <body onload="onPageLoad()">
+  <body onload="onPageLoad()" style="min-width: 500px">
   
     <!-- Heading and Description (Jekyll adds this as a page header) -->
     <!--h1>Motion Profile Investigation and Comparison</h1-->
@@ -48,10 +48,10 @@ categories: motion-control
       
         <p>
           <label><h3></h3></label>
-          <label><h3>Curve Parameters</h3></label>
+          <label><h3>Parameters</h3></label>
         </p>
         <p>
-          <label for="position_slider">Target Position:</label>
+          <label for="position_slider">Position:</label>
           <input id="position_slider" type="range" min="10" max="500" value="200" step="10" class="slider" oninput="onKinematicSliderChanged()">
           <label class="slider_display" id="position_slider_label" ></label>
         </p>
@@ -65,16 +65,17 @@ categories: motion-control
           <input id="acceleration_slider" type="range" min="500" max="8000" value="3000" step="100" class="slider" oninput="onKinematicSliderChanged()">
           <label class="slider_display" id="acceleration_slider_label" ></label>
         </p>
+        
         <p>
           <label for="jerk_slider">Jerk:</label>
           <input id="jerk_slider" type="range" min="1000" max="1000000" value="75000" step="1000" class="slider" oninput="onKinematicSliderChanged()">
           <label class="slider_display" id="jerk_slider_label" ></label>
         </p>
         
-        <p>
+        <!--p>
           <label><h3></h3></label>
           <label><h3>Spring/Mass Properties</h3></label>
-        </p>
+        </p-->
         <p>
           <label for="resonant_frequency_slider">Resonant Frequency:</label>
           <input id="resonant_frequency_slider" type="range" min="1" max="100" value="50" class="slider" oninput="onPhysicsSliderChanged()">
@@ -89,29 +90,34 @@ categories: motion-control
         <p>
           <label></label>
           <input type="button" onclick="recomputeAllCharts()" value="Update Graphs"></input>
-          <!--label class="slider_display" >blah2</label-->
-          <label class="slider_display" >Auto Update: <input type="checkbox" id="auto_update_checkbox"></input></label>
+          <label class="slider_display" >Auto:<input type="checkbox" id="auto_update_checkbox"></input></label>
         </p>
         
       </form>
     </div>
     
+    <!--p>
+      <label class="slider_display" id="trapezoidal_acceleration_slider_label" >Equivalent trapezoidal acceleration:</label>
+    </p-->
     
+    
+    <!--p>
+      <label for="show_position_graphs_checkbox">
+        (show kinematic graphs
+        <input id="show_position_graphs_checkbox" type="checkbox" checked="true" oninput="updatePositionGraphVisibility()">)
+      </label>
+      <label for="show_frequency_graphs_checkbox">
+        (show frequency graphs
+        <input id="show_frequency_graphs_checkbox" type="checkbox" checked="true" oninput="updateFrequencyGraphVisibility()">)
+      </label>
+    </p-->
     
     <!-- Graphs -->
-    <div style="position: relative; width:800px">
-      <p>
-        <label for="show_position_graphs_checkbox">
-          (show kinematic graphs
-          <input id="show_position_graphs_checkbox" type="checkbox" checked="true" oninput="updatePositionGraphVisibility()">)
-        </label>
-        <label for="show_frequency_graphs_checkbox">
-          (show frequency graphs
-          <input id="show_frequency_graphs_checkbox" type="checkbox" checked="true" oninput="updateFrequencyGraphVisibility()">)
-        </label>
-      </p>
-      <canvas id="kinematic_chart_canvas" width="800" height="600"></canvas>
-      <canvas id="frequency_chart_canvas" width="800" height="400"></canvas>
+    <div style="position: relative; height: 500px">
+      <canvas id="kinematic_chart_canvas"></canvas>
+    </div>
+    <div style="position: relative; height: 500px">
+      <canvas id="frequency_chart_canvas"></canvas>
     </div>
     
     <p>graphed using <a href="https://www.chartjs.org/">chartjs</a></p>

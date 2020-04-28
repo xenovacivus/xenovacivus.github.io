@@ -6,8 +6,6 @@ var frequency_chart;
 var a_scale = 0.1;
 var j_scale = 0.001;
 
-
-
 function updatePositionGraphVisibility()
 {
     graph_canvas = document.getElementById("kinematic_chart_canvas");
@@ -159,6 +157,7 @@ function onPageLoad()
 
         // Configuration options go here
         options: {
+            maintainAspectRatio: false,
             title: {
                 display: true,
                 text: 'Motion Profile Curves',
@@ -232,6 +231,7 @@ function onPageLoad()
             ],
         },
         options: {
+            maintainAspectRatio: false,
             title: {
                 display: true,
                 text: 'Curve Frequency Components',
@@ -457,7 +457,7 @@ function recalculate_s_curve() {
     var test_vel_min = 0;
     var test_vel_max = max_vel;
     var test_vel = test_vel_max; // Start at max vel - probably the solution
-    while ((test_vel_max - test_vel_min) > 5) // Solve to within 5 velocity units
+    while ((test_vel_max - test_vel_min) > 5) // Solve to within 2 velocity units
     {
         if (Math.pow(max_acc, 2) / max_jrk > test_vel) {
             t1 = Math.pow(test_vel / max_jrk, 0.5);
@@ -655,10 +655,10 @@ function acc_dft(curve, fmin, fmax)
 
 function update_frequency_data()
 {
-    if (!document.getElementById("show_frequency_graphs_checkbox").checked)
-    {
-        return;
-    }
+    //if (!document.getElementById("show_frequency_graphs_checkbox").checked)
+    //{
+    //    return;
+    //}
     //console.time("dft");
     frequency_chart.data.datasets[0].data = acc_dft(s_curve, 0, 100);
     frequency_chart.data.datasets[1].data = acc_dft(t_curve, 0, 100);
@@ -736,11 +736,11 @@ function reloadParameters()
     // effective_acceleration = s_curve[1].a;
     // if (effective_acceleration < max_acc - 10)
     // {
-    //     info_str = " (limited to " + Math.round(effective_acceleration) + ")"
+    //     info_str = " (limited to " + Math.round(effective_acceleration) + ") "
     // }
     
-    document.getElementById("acceleration_slider_label").innerHTML = "" + max_acc + " mm/s&sup2;" + info_str + " (trapezoidal acceleration: " + Math.round(max_acc_t_curve) + ")";
-    
+    document.getElementById("acceleration_slider_label").innerHTML = "" + max_acc + " mm/s&sup2;";
+    //document.getElementById("trapezoidal_acceleration_slider_label").innerHTML = info_str + "Equivalent trapezoidal acceleration: " + Math.round(max_acc_t_curve);
 
 }
 
@@ -759,6 +759,12 @@ function onKinematicSliderChanged()
     if (document.getElementById("auto_update_checkbox").checked)
     {
         recomputeAllCharts();
+    }
+    else
+    {
+        // Just redraw the kinematic graphs (minus the error ones).  That's pretty fast.
+        update_curve_data();
+        kinematic_chart.update();
     }
 }
 

@@ -1,7 +1,7 @@
 
 .slider {
     -webkit-appearance: none;
-    width: 250px;
+    width: 150px;
     height: 25px;
     background: #d3d3d3;
     outline: none;
@@ -32,7 +32,6 @@
 
 .slidergroup {
   padding: 5px;
-  min-width: 350px;
   margin: 0px;
 }
 
@@ -46,7 +45,7 @@
   padding: 0px;
   border:none;
   height: 30px;
-  width: 250px;
+  width: 150px;
   background-color: #4CAF50;
   opacity: 0.8;
 }
